@@ -6,16 +6,19 @@ from app.services.ocr import extract_pdf
 
 app = FastAPI(title="Contrackt OCR API")
 
+
 @app.get("/")
 def health_check():
     return {"status": "online", "motor": "PaddleOCR v5"}
 
+
 @app.post("/extract")
 async def process_pdf(file: UploadFile = File(...)):
-
     # Verificação básica de segurança
     if file.content_type != "application/pdf":
-        raise HTTPException(status_code=400, detail="Por favor envie apenas arquivos PDF válidos")
+        raise HTTPException(
+            status_code=400, detail="Por favor envie apenas arquivos PDF válidos"
+        )
 
     start = time.time()
 
@@ -34,7 +37,7 @@ async def process_pdf(file: UploadFile = File(...)):
             "file": file.filename,
             "time_process_seconds": round(total_time, 2),
             "process_pages": len(result),
-            "data": result
+            "data": result,
         }
 
     except Exception as e:
