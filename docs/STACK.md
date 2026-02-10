@@ -40,7 +40,7 @@ app/
 │       └── health.py
 ├── services/
 │   ├── ocr.py           # PaddleOCR + (opcional) TrOCR
-│   ├── hash_and_metadata.py
+│   ├── hashing.py
 │   └── (Fase 2: batch, webhooks, certificate)
 ├── schemas/             # Pydantic: ExtractionResult, BatchResponse, etc.
 └── config.py            # Settings (pydantic-settings): env, feature flags
@@ -171,7 +171,7 @@ frontend/
 
 ### 6.1 Fase 1 (API)
 
-- **Nenhuma persistência no servidor.** Documentos e resultados processados em memória; hashes e `metadata_extracao` retornados na resposta. (Opcional: log de auditoria apenas `document_hash`, `result_hash`, `processing_time_ms`, `document_type`, `pages` em arquivo ou DB; ver plano.)
+- **Nenhuma persistência no servidor.** Documentos e resultados processados em memória; hashes e `extraction_metadata` retornados na resposta. (Opcional: log de auditoria apenas `document_hash`, `result_hash`, `processing_time_ms`, `document_type`, `pages` em arquivo ou DB; ver plano.)
 
 ### 6.2 Fase 2+ (Ultrathink Cloud)
 
@@ -212,7 +212,7 @@ frontend/
 
 | Tipo | Ferramenta | Escopo |
 |------|------------|--------|
-| **Backend unit** | pytest | `hash_and_metadata`, funções puras de `ocr` (mocks de PaddleOCR) |
+| **Backend unit** | pytest | `hashing`, funções puras de `ocr` (mocks de PaddleOCR) |
 | **Backend API** | pytest + `httpx.ASGITransport` + `TestClient` | `POST /v1/extract` com PDF fixture; validação de schema |
 | **Frontend unit** | Vitest | Componentes e funções de `api/extract` (mock de fetch) |
 | **E2E (opcional)** | Playwright | Upload → resultado → hashes na UI |

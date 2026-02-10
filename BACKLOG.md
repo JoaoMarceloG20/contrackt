@@ -37,7 +37,7 @@ O projeto já possui:
 |----|--------|--------|------------|
 | P0-1 | Criar rota `POST /v1/extract` com multipart/form-data | 🔄 Migrar de `/extract` | P0 |
 | P0-2 | Validar upload apenas de PDFs (content_type) | ✅ Já existe | P0 |
-| P0-3 | Implementar `hash_and_metadata.py` com SHA-256 | ⏳ Pendente | P0 |
+| P0-3 | Implementar `hashing.py` com SHA-256 | ⏳ Pendente | P0 |
 | P0-4 | Calcular `document_hash` e `result_hash` | ⏳ Pendente | P0 |
 | P0-5 | Criar rota `GET /v1/health` | 🔄 Migrar de `/` | P0 |
 | P0-6 | Ajustar OCR para retornar `mean_confidence` por página | ⏳ Pendente | P0 |
@@ -307,7 +307,7 @@ O projeto já possui:
 
 Baseado no estado atual do projeto, as 5 tarefas prioritárias para a próxima semana são:
 
-1. **P0-3**: Implementar `hash_and_metadata.py` - *core do diferencial de compliance*
+1. **P0-3**: Implementar `hashing.py` - *core do diferencial de compliance*
 2. **P0-4**: Calcular `document_hash` e `result_hash` - *necessário para o certificado*
 3. **P0-1**: Migrar rota para `/v1/extract` com nova estrutura de resposta
 4. **P0-6**: Ajustar OCR para retornar `mean_confidence` por página

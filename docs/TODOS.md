@@ -35,10 +35,10 @@
 
 ### 1.2 Serviço de hash e metadata
 
-- [ ] **1.2.1** Criar arquivo `app/services/hash_and_metadata.py`.
+- [ ] **1.2.1** Criar arquivo `app/services/hashing.py`.
 - [ ] **1.2.2** Implementar `compute_document_hash(content: bytes) -> str`: usar `hashlib.sha256(content).hexdigest()` e retornar string hex (ex. `"a1b2c3d4..."`).
 - [ ] **1.2.3** Implementar `compute_result_hash(data: dict) -> str`: `json.dumps(data, sort_keys=True)` em UTF-8, depois `hashlib.sha256(...).hexdigest()`.
-- [ ] **1.2.4** Implementar `build_metadata_extracao(pages: list, processing_time_ms: int) -> dict` com: `confianca_geral` (média dos `mean_confidence` ou dos scores por página, ou 0 se vazio), `campos_baixa_confianca` (lista de `"page_N"` onde `mean_confidence < 0.85` ou `low_confidence_alert`), `campos_nao_encontrados` (lista vazia na Fase 1), `paginas_processadas` (len(pages)), `tempo_processamento_ms` (valor passado).
+- [ ] **1.2.4** Implementar `build_extraction_metadata(pages: list, processing_time_ms: int) -> dict` com: `overall_confidence` (média dos `mean_confidence` ou dos scores por página, ou 0 se vazio), `low_confidence_fields` (lista de `"page_N"` onde `mean_confidence < 0.85` ou `low_confidence_alert`), `fields_not_found` (lista vazia na Fase 1), `pages_processed` (len(pages)), `processing_time_ms` (valor passado).
 - [ ] **1.2.5** Exportar as três funções no `__init__` ou importá-las diretamente em `main.py`.
 
 ### 1.3 Montagem da resposta ExtractionResult
@@ -47,10 +47,10 @@
 - [ ] **1.3.2** Após `extract_pdf`, montar `data = {"pages": result, "full_text": " ".join(...)}` (full_text opcional: concatenação do texto de todas as páginas).
 - [ ] **1.3.3** Calcular `result_hash = compute_result_hash(data)`.
 - [ ] **1.3.4** Calcular `processing_time_ms = int((time.time() - start) * 1000)` (usar `start = time.time()` no início do handler).
-- [ ] **1.3.5** Chamar `metadata_extracao = build_metadata_extracao(result, processing_time_ms)`.
-- [ ] **1.3.6** Calcular `confidence` como a média dos `mean_confidence` de cada página (ou dos `rec_scores` se `mean_confidence` não existir ainda); se não houver, usar `metadata_extracao["confianca_geral"]`.
+- [ ] **1.3.5** Chamar `extraction_metadata = build_extraction_metadata(result, processing_time_ms)`.
+- [ ] **1.3.6** Calcular `confidence` como a média dos `mean_confidence` de cada página (ou dos `rec_scores` se `mean_confidence` não existir ainda); se não houver, usar `extraction_metadata["overall_confidence"]`.
 - [ ] **1.3.7** Definir `chat_package = None` (sempre na Fase 1, independente de `include_chat_package`).
-- [ ] **1.3.8** Retornar JSON: `{"data": data, "document_hash": document_hash, "result_hash": result_hash, "confidence": confidence, "processing_time_ms": processing_time_ms, "metadata_extracao": metadata_extracao, "chat_package": chat_package}`.
+- [ ] **1.3.8** Retornar JSON: `{"data": data, "document_hash": document_hash, "result_hash": result_hash, "confidence": confidence, "processing_time_ms": processing_time_ms, "extraction_metadata": extraction_metadata, "chat_package": chat_package}`.
 
 ### 1.4 Rota /v1/health e /extract legado
 
@@ -62,7 +62,7 @@
 ## 2. MVP — Ajustes no OCR
 
 - [ ] **2.1 Em `app/services/ocr.py`**, para cada página em `result[0]` (ou estrutura equivalente do PaddleOCR), calcular a média dos `rec_scores` (ou `current_score` no loop existente) e adicionar ao `page_data` a chave `"mean_confidence"` com esse valor.
-- [ ] **2.2** Garantir que `build_metadata_extracao` em `hash_and_metadata.py` use `mean_confidence` por página quando disponível; caso contrário, inferir a partir de `low_confidence_alert` ou dos itens em `text` com `confidence`.
+- [ ] **2.2** Garantir que `build_extraction_metadata` em `hashing.py` use `mean_confidence` por página quando disponível; caso contrário, inferir a partir de `low_confidence_alert` ou dos itens em `text` com `confidence`.
 - [ ] **2.3 (Opcional — pode ficar para pós-MVP)** Integrar TrOCR: em `ocr.py`, para cada região/linha com `confidence < 0.85`, extrair o bbox, fazer crop da imagem, rodar TrOCR (`microsoft/trocr-base-handwritten`) no crop e substituir o texto e a confidence no resultado. Isolar em função `refine_with_trocr(image, paddle_result) -> refined_result` ou similar.
 
 ---
@@ -86,7 +86,7 @@
 
 ### 3.3 Tipos e API client
 
-- [ ] **3.3.1** Criar `frontend/types/extract.ts` com interfaces: `PageData` (`page_number`, `text: Array<{content, confidence}>`, `low_confidence_alert` ou equivalente); `MetadataExtracao` (`confianca_geral`, `campos_baixa_confianca`, `campos_nao_encontrados`, `paginas_processadas`, `tempo_processamento_ms`); `ExtractionResult` (`data`, `document_hash`, `result_hash`, `confidence`, `processing_time_ms`, `metadata_extracao`, `chat_package`).
+- [ ] **3.3.1** Criar `frontend/types/extract.ts` com interfaces: `PageData` (`page_number`, `text: Array<{content, confidence}>`, `low_confidence_alert` ou equivalente); `ExtractionMetadata` (`overall_confidence`, `low_confidence_fields`, `fields_not_found`, `pages_processed`, `processing_time_ms`); `ExtractionResult` (`data`, `document_hash`, `result_hash`, `confidence`, `processing_time_ms`, `extraction_metadata`, `chat_package`).
 - [ ] **3.3.2** Criar `frontend/lib/extract.ts` com função `postExtract(file: File, options?: { document_type?: string; include_chat_package?: boolean }): Promise<ExtractionResult>`.
 - [ ] **3.3.3** Em `postExtract`: criar `FormData`, anexar `file` com chave `"file"`; se `options?.document_type` existir, anexar com chave `"document_type"`; se `options?.include_chat_package` não for `undefined`, anexar `"include_chat_package"` como string `"true"` ou `"false"`.
 - [ ] **3.3.4** Fazer `fetch(\`${process.env.NEXT_PUBLIC_API_URL || ""}/v1/extract\`, { method: "POST", body: formData })`; se `!res.ok`, ler `res.json().catch(() => ({}))` e lançar `new Error(err.detail || \`Erro ${res.status}\`)`; senão `return res.json()`.
@@ -94,10 +94,10 @@
 ### 3.4 Componentes
 
 - [ ] **3.4.1** Criar `frontend/components/UploadZone.tsx`: área com borda 2px dashed `var(--color-border)`, `border-radius: var(--radius-lg)`, padding `var(--space-8)`; texto "Arraste o PDF ou clique para selecionar" em `--color-text-muted`; `<input type="file" accept="application/pdf" />` oculto, acionado pelo clique na área ou por drag-and-drop; estado `file: File | null`; ao selecionar, exibir nome e tamanho do arquivo e botão "Remover"; em `onDragOver`/`onDrop`, prevenir default e atualizar estado (opcional: borda `--color-primary` e fundo `--color-primary-muted` no hover/drag). Expor `file` e `onFileChange` ou `onClear` via props.
-- [ ] **3.4.2** Criar `frontend/components/ExtractResult.tsx`: recebe `result: ExtractionResult`; exibe `result.data.pages` em lista ou abas; para cada página: `page_number`, lista de `text` com `content` e, se `confidence < 0.85`, fundo `var(--color-warning-bg)` ou sublinhado; exibir `metadata_extracao.paginas_processadas` e `metadata_extracao.tempo_processamento_ms`.
+- [ ] **3.4.2** Criar `frontend/components/ExtractResult.tsx`: recebe `result: ExtractionResult`; exibe `result.data.pages` em lista ou abas; para cada página: `page_number`, lista de `text` com `content` e, se `confidence < 0.85`, fundo `var(--color-warning-bg)` ou sublinhado; exibir `extraction_metadata.pages_processed` e `extraction_metadata.processing_time_ms`.
 - [ ] **3.4.3** Criar `frontend/components/HashBlock.tsx`: recebe `document_hash` e `result_hash`; exibe cada hash em `font-family: var(--font-mono)`, `font-size: var(--text-sm)`; truncar com `text-overflow: ellipsis` ou em uma linha; botão "Copiar" ao lado de cada hash que chama `navigator.clipboard.writeText(document_hash)` ou `result_hash`; `aria-label` descritivo no botão.
 - [ ] **3.4.4** Criar `frontend/components/ConfidenceBadge.tsx`: recebe `confidence: number`; se `>= 0.9` usa `--color-success-bg` e `--color-success`; se `>= 0.7` e `< 0.9` usa `--color-warning-bg` e `--color-warning`; se `< 0.7` usa `--color-error-bg` e `--color-error`; exibe texto tipo "Alta", "Média", "Baixa" ou o valor em percentual; `border-radius: var(--radius-sm)`, `padding: 4px 10px`, `font-size: var(--text-sm)`, `font-weight: 500`.
-- [ ] **3.4.5** Criar `frontend/components/MetadataExtracao.tsx` (opcional): recebe `metadata_extracao` e exibe em formato resumido (confiança geral, páginas processadas, tempo, lista de `campos_baixa_confianca`).
+- [ ] **3.4.5** Criar `frontend/components/ExtractionMetadata.tsx` (opcional): recebe `extraction_metadata` e exibe em formato resumido (overall confidence, pages processed, processing time, lista de `low_confidence_fields`).
 
 ### 3.5 App e fluxo
 
@@ -107,7 +107,7 @@
 - [ ] **3.5.4** Adicionar botão "Processar" (ou "Enviar"): ao clicar, se `!file` mostrar erro; senão `setLoading(true)`, `setError(null)`, chamar `postExtract(file, { document_type, include_chat_package })`, em `then` `setResult(res)`, em `catch` `setError(e.message)`, em `finally` `setLoading(false)`.
 - [ ] **3.5.5** Se `loading`, exibir spinner (Loader2 do lucide-react) ou skeleton na área de resultado.
 - [ ] **3.5.6** Se `error`, exibir mensagem em `--color-error` ou card com `--color-error-bg`.
-- [ ] **3.5.7** Se `result`, exibir `<ExtractResult result={result} />`, `<HashBlock document_hash={result.document_hash} result_hash={result.result_hash} />`, `<ConfidenceBadge confidence={result.confidence} />` e, se existir, `<MetadataExtracao metadata_extracao={result.metadata_extracao} />`.
+- [ ] **3.5.7** Se `result`, exibir `<ExtractResult result={result} />`, `<HashBlock document_hash={result.document_hash} result_hash={result.result_hash} />`, `<ConfidenceBadge confidence={result.confidence} />` e, se existir, `<ExtractionMetadata extraction_metadata={result.extraction_metadata} />`.
 - [ ] **3.5.8** Garantir que a UI seja responsiva (coluna única em mobile; em desktop, upload à esquerda ou no topo e resultado à direita/abaixo).
 
 ---

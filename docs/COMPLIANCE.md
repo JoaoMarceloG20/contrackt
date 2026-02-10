@@ -216,7 +216,7 @@ Para **contratos de crédito** (em especial PF e, quando aplicável, ME/EPP), o 
 | **Encargos de inadimplência** (juros de mora, multa) | Recomendado | Transparência, CDC |
 | **Seguros (prestamista, MIP, etc.) e prêmios** | Recomendado | CET, Res. CMN |
 
-O **software** deve extrair, validar e sinalizar (ex.: `campos_nao_encontrados`, `campos_baixa_confianca`) esses itens para que o **cliente** audite e cumpra BACEN/CMN e CDC.
+O **software** deve extrair, validar e sinalizar (ex.: `fields_not_found`, `low_confidence_fields`) esses itens para que o **cliente** audite e cumpra BACEN/CMN e CDC.
 
 ---
 
@@ -242,7 +242,7 @@ O **software** deve extrair, validar e sinalizar (ex.: `campos_nao_encontrados`,
 | **Minimização e zero-retention (LGPD)** | Documento e dados extraídos **não são armazenados** no Ultrathink Cloud; processamento em memória; apenas hashes e logs sem PII são retidos. |
 | **Transparência e prestação de contas** | **Certificado de processamento** com `document_hash`, `result_hash`, declaração de não-retenção; **`/v1/verify/{id}`** para verificação; documentação e DPA. |
 | **Segurança (LGPD, BACEN, ISO, SOC 2)** | Criptografia (TLS, AES no cliente), hashes SHA-256, deleção segura (overwrite 3-pass quando houver arquivo em disco), controle de acesso (API Key), logs e audit trail. |
-| **Campos regulatórios (CET, IOF, CDC)** | Schema de extração com CET, taxa nominal, IOF, valor total, sistema de amortização, parcelas; `metadata_extracao` com `campos_nao_encontrados` e `campos_baixa_confianca` para auditoria. |
+| **Campos regulatórios (CET, IOF, CDC)** | Schema de extração com CET, taxa nominal, IOF, valor total, sistema de amortização, parcelas; `extraction_metadata` com `fields_not_found` e `low_confidence_fields` para auditoria. |
 | **Sigilo e dados de saúde (CFM, LGPD)** | Zero-retention evita que laudos/prontuários fiquem no cloud; o cliente mantém o dado no seu ambiente, com controles de acesso e conformidade à Res. CFM 1.821/2007. |
 | **Rastreabilidade e auditoria (BACEN, fiscal, trabalhista)** | Hashes e certificado permitem comprovar **que** um documento foi processado e **quando**; o cliente guarda o documento e os dados extraídos conforme prazos legais. |
 | **Operador (LGPD)** | DPA define finalidade, instruções do controlador, subcontratados, medidas de segurança, notificação de incidentes e que o Ultrathink **não retém** dados pessoais no cloud. |

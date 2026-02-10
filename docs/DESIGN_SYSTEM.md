@@ -225,7 +225,7 @@ Evitar: gradientes roxo/lilás genéricos, fontes óbvias (Inter, Roboto, Arial)
 
 - Background: `--color-surface`. Borda: 1px `--color-border`. `--radius-lg`.
 - Padding: `--space-6`. Sombra leve (opcional): `0 1px 3px rgba(0,0,0,0.06)`.
-- Uso: resultado por página, bloco de hashes, resumo de `metadata_extracao`.
+- Uso: resultado por página, bloco de hashes, resumo de `extraction_metadata`.
 
 ### 5.4 Badges (Confiança e Estado)
 
@@ -291,7 +291,7 @@ Evitar: gradientes roxo/lilás genéricos, fontes óbvias (Inter, Roboto, Arial)
 ### 8.2 Comportamento da Demo (Fase 1)
 
 - **&lt; 768px:** Upload em coluna única; resultado em abas ou accordion (Página 1, 2, …); hashes em bloco abaixo, com quebra de linha.
-- **≥ 768px:** Upload à esquerda ou no topo; resultado (páginas) em coluna principal; painel lateral ou seção colapsável para hashes e `metadata_extracao`.
+- **≥ 768px:** Upload à esquerda ou no topo; resultado (páginas) em coluna principal; painel lateral ou seção colapsável para hashes e `extraction_metadata`.
 
 ---
 

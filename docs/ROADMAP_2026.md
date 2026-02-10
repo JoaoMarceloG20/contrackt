@@ -155,7 +155,7 @@
 
 | Semana | Foco | Entregas |
 |--------|------|----------|
-| **S1 (17–23 jan)** | API v1 + hashes | `/v1/extract`, `/v1/health`; `document_type`, `include_chat_package`; `hash_and_metadata.py`; `document_hash`, `result_hash`, `metadata_extracao`, `confidence`; ajustes em `ocr.py` (mean_confidence) |
+| **S1 (17–23 jan)** | API v1 + hashes | `/v1/extract`, `/v1/health`; `document_type`, `include_chat_package`; `hashing.py`; `document_hash`, `result_hash`, `extraction_metadata`, `confidence`; ajustes em `ocr.py` (mean_confidence) |
 | **S2 (24–30 jan)** | Demo UI (base) | `frontend/` com Vite+React+TS; `tokens.css`, `global.css`; `UploadZone`, `ExtractResult`, `HashBlock`, `ConfidenceBadge`; `api/extract.ts`, `postExtract`; integração com `POST /v1/extract` |
 | **S3 (31 jan – 6 fev)** | Demo + Docker | Refino UI (loading/erro, responsivo); `Dockerfile` multi-stage; `docker-compose`; README com `curl` e instruções; `GET /v1/health` |
 | **S4 (7–13 fev)** | Estabilização e piloto | Testes (pytest, Vitest); correções; doc de critérios para piloto e one-pager; **MVP congelado para testes em 13/fev** |

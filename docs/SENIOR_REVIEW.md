@@ -23,7 +23,7 @@ Este documento transforma a documentação existente (`docs/PRD.md`, `docs/TODOS
 - Implementar funções puras:
   - `compute_document_hash(content: bytes) -> str` (SHA-256)
   - `compute_result_hash(data: dict) -> str` (JSON canônico + SHA-256)
-  - `build_metadata_extracao(...) -> dict` (confiança, páginas, tempo etc.)
+  - `build_extraction_metadata(...) -> dict` (confiança, páginas, tempo etc.)
 - Padronizar formato (ex.: `sha256:<hex>` ou apenas `<hex>`) e documentar.
 - Resultado esperado: reprocessar o mesmo documento gera hashes previsíveis (ou explica quando não).
 
@@ -56,7 +56,7 @@ Este documento transforma a documentação existente (`docs/PRD.md`, `docs/TODOS
 - Em `app/services/ocr.py`:
   - garantir estrutura de saída consistente (lista por página)
   - calcular `mean_confidence` por página (média de `rec_scores`) e sinalizar baixa confiança
-- Resultado esperado: `metadata_extracao` e `confidence` deixam de ser “chute” e passam a ser consistentes.
+- Resultado esperado: `extraction_metadata` e `confidence` deixam de ser "chute" e passam a ser consistentes.
 
 ## 8) Definir “zero-retention” com precisão técnica e jurídica
 

@@ -209,12 +209,12 @@ export interface PageData {
   low_confidence_alert: boolean
 }
 
-export interface MetadataExtracao {
-  confianca_geral: number
-  campos_baixa_confianca: string[]
-  campos_nao_encontrados: string[]
-  paginas_processadas: number
-  tempo_processamento_ms: number
+export interface ExtractionMetadata {
+  overall_confidence: number
+  low_confidence_fields: string[]
+  fields_not_found: string[]
+  pages_processed: number
+  processing_time_ms: number
 }
 
 export interface ExtractionResult {
@@ -223,7 +223,7 @@ export interface ExtractionResult {
   result_hash: string
   confidence: number
   processing_time_ms: number
-  metadata_extracao: MetadataExtracao
+  extraction_metadata: ExtractionMetadata
   chat_package: null | object
 }
 ```
@@ -293,7 +293,7 @@ Para Instrument Sans ou Source Serif (Design System / Harvey), usar `next/font/g
 
 ### 9.2 E2E (Playwright, opcional)
 
-- Fluxo: escolher PDF → upload → aguardar → ver resultado, hashes e `metadata_extracao`.
+- Fluxo: escolher PDF → upload → aguardar → ver resultado, hashes e `extraction_metadata`.
 - Rodar com `bun run test:e2e`; config em `playwright.config.ts`. Garantir que o app esteja em `http://localhost:3000` (Next) e que a API ou o mock esteja acessível.
 
 ### 9.3 Cobertura
@@ -394,7 +394,7 @@ Se não usar static export, o stage de frontend produz `.next/` e a imagem final
 
 | Fase | Funcionalidades | Stack |
 |------|-----------------|-------|
-| **1** | Upload, resultado por página, hashes, `metadata_extracao`, badges de confiança | Next.js 15, Bun, React 18, TS, tokens.css, lucide-react |
+| **1** | Upload, resultado por página, hashes, `extraction_metadata`, badges de confiança | Next.js 15, Bun, React 18, TS, tokens.css, lucide-react |
 | **2** | (Opc.) Rotas `/demo`, `/admin`; preferências; integração com batch (polling ou webhook UI) | File-based routing (app/demo/, app/admin/); estado global se necessário |
 | **3** | Chat: input, mensagens, citações; busca por contrato; histórico | + componentes Chat; `chat_package` na API |
 | **4+** | Novos fluxos (documentoscopia, export, etc.) | Estender componentes e rotas |

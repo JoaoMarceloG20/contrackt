@@ -274,12 +274,12 @@ FASE 3: Empresas em Geral
       }
     ],
 
-    "metadata_extracao": {
-      "confianca_geral": "decimal",
-      "campos_baixa_confianca": ["string"],
-      "campos_nao_encontrados": ["string"],
-      "paginas_processadas": "integer",
-      "tempo_processamento_ms": "integer"
+    "extraction_metadata": {
+      "overall_confidence": "decimal",
+      "low_confidence_fields": ["string"],
+      "fields_not_found": ["string"],
+      "pages_processed": "integer",
+      "processing_time_ms": "integer"
     }
   }
 }

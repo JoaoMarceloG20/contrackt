@@ -223,7 +223,7 @@ Não rotule aleatoriamente “milhares” de docs.
 Priorize:
 
 - docs com `low_confidence_alert`
-- campos ausentes (`campos_nao_encontrados`)
+- campos ausentes (`fields_not_found`)
 - divergência entre baseline (regex) e modelo
 
 ## Modelo (recomendação)
