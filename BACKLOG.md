@@ -35,15 +35,15 @@ O projeto já possui:
 #### Semana 1: API v1 + Hashes (17-23 jan)
 | ID | Tarefa | Status | Prioridade |
 |----|--------|--------|------------|
-| P0-1 | Criar rota `POST /v1/extract` com multipart/form-data | 🔄 Migrar de `/extract` | P0 |
+| P0-1 | Criar rota `POST /v1/extract` com multipart/form-data | ✅ Concluída | P0 |
 | P0-2 | Validar upload apenas de PDFs (content_type) | ✅ Já existe | P0 |
-| P0-3 | Implementar `hashing.py` com SHA-256 | ⏳ Pendente | P0 |
+| P0-3 | Implementar `hashing.py` com SHA-256 | 🔄 Em andamento (`compute_document_hash` e `compute_result_hash` prontos, `build_extraction_metadata` pendente) | P0 |
 | P0-4 | Calcular `document_hash` e `result_hash` | ⏳ Pendente | P0 |
 | P0-5 | Criar rota `GET /v1/health` | 🔄 Migrar de `/` | P0 |
 | P0-6 | Ajustar OCR para retornar `mean_confidence` por página | ⏳ Pendente | P0 |
 | P0-7 | Montar resposta `ExtractionResult` completa | ⏳ Pendente | P0 |
 
-**Nota sobre P0-1:** A rota atual `/extract` precisa ser migrada para `/v1/extract` com a nova estrutura de resposta conforme PRD.
+**Nota sobre P0-1:** ✅ Rota migrada para `/v1/extract` com parâmetros `document_type` e `include_chat_package`, validação de content_type, limpeza de memória com `gc.collect()` e remoção de logs com PII.
 
 #### Semana 2: Demo UI Base (24-30 jan)
 | ID | Tarefa | Status | Prioridade |
