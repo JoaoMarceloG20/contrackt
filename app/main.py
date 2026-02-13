@@ -20,9 +20,9 @@ async def process_pdf(
     include_chat_package: bool = Form(False)):
 
     # Verificação básica de segurança
-    if file.content_type != "application/pdf":
+    if file.content_type not in ["application/pdf", "image/jpeg", "image/png"]:
         raise HTTPException(
-            status_code=400, detail="Por favor envie apenas arquivos PDF válidos"
+            status_code=400, detail="Por favor envie apenas arquivos válidos"
         )
 
     #Valores aceitos para document_type
